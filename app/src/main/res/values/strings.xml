@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">WCSTinder</string>
+    <string name="select_your_wsdc_level">Select Your WSDC Level</string>
+    <string name="newcomer">Newcomer</string>
+    <string name="novice">Novice</string>
+    <string name="intermediate">Intermediate</string>
+    <string name="advanced">Advanced</string>
+    <string name="all_star">All-Star</string>
+</resources>
