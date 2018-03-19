@@ -31,12 +31,16 @@ public class APIService {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.grailed.com/api/")
+                .baseUrl("http://trackmyswing.andrewsunada.com/api/dancers/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
         mInterface = retrofit.create(APIInterface.class);
+    }
+
+    public Call getAllForDivision(String role, String division){
+        return mInterface.getDancers(division, role);
     }
 
 //    public Call getFollows(){

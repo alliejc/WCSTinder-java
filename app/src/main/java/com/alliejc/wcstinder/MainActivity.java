@@ -8,7 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.RadioGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,8 +26,9 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private RadioGroup mRadioGroup;
     private RecyclerView mRecyclerView;
-    private int mSelectedLevel;
+    private String mSelectedLevel;
     private TabLayout mTabLayout;
+    private List<Dancer> mDancers;
 
 
     @Override
@@ -30,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mDancers = new ArrayList<>();
         setUpUI();
         setUpToolbar();
     }
@@ -44,19 +51,19 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.newcomer_radio_button:
-                        mSelectedLevel = NEWCOMER;
+                        mSelectedLevel = "newcomer";
                         break;
                     case R.id.novice_radio_button:
-                        mSelectedLevel = NOVICE;
+                        mSelectedLevel = "novice";
                         break;
                     case R.id.intermediate_radio_button:
-                        mSelectedLevel = INTERMEDIATE;
+                        mSelectedLevel = "intermediate";
                         break;
                     case R.id.advanced_radio_button:
-                        mSelectedLevel = ADVANCED;
+                        mSelectedLevel = "advanced";
                         break;
                     case R.id.allstar_radio_button:
-                        mSelectedLevel = ALL_STAR;
+                        mSelectedLevel = "allstar";
                         break;
                 }
             }
@@ -85,39 +92,48 @@ public class MainActivity extends AppCompatActivity {
     private void getTabData(int tabPosition){
         switch (tabPosition){
             case 0:
-                getLeaders();
+                getLeaders(mSelectedLevel);
                 break;
             case 1:
-                getFollowers();
+                getFollowers(mSelectedLevel);
                 break;
         }
     }
 
-    private void getFollowers() {
+    private void getFollowers(String division) {
+        Call<Dancer> call = APIService.getAPIService().getAllForDivision("follower", division);
+        call.enqueue(new Callback<Dancer>() {
+            @Override
+            public void onResponse(Call<Dancer> call, Response<Dancer> response) {
+                if(response.isSuccessful()) {
+                    mDancers.add(response.body());
+                }
+            }
 
+            @Override
+            public void onFailure(Call<Dancer> call, Throwable t) {
+
+            }
+        });
     }
 
-    private void getLeaders() {
-    }
+    private void getLeaders(String division) {
+        Call<Dancer> call = APIService.getAPIService().getAllForDivision("leader", division);
+        call.enqueue(new Callback<Dancer>() {
+            @Override
+            public void onResponse(Call<Dancer> call, Response<Dancer> response) {
+                if(response.isSuccessful()) {
+                    mDancers.add(response.body());
+                }
+            }
 
-//    Call call = APIService.get.getArticles();
-//        call.enqueue(new Callback<Article>() {
-//        @Override
-//        public void onResponse(@NonNull Call<Article> call, @NonNull Response<Article> response) {
-//            if (response.isSuccessful()) {
-//                mArticleDatumList.addAll(response.body().getData());
-//                startArticlesFragment();
-//            } else {
-//                Toast.makeText(MainActivity.this, "Error on response", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//
-//        @Override
-//        public void onFailure(Call<Article> call, Throwable t) {
-//            Log.e("on failure", call.toString() + "--" + t.toString() + "--"+ t.getMessage());
-//        }
-//    });
-}
+            @Override
+            public void onFailure(Call<Dancer> call, Throwable t) {
+
+            }
+        });
+
+    }
 
     private void setUpToolbar() {
         setSupportActionBar(mToolbar);
