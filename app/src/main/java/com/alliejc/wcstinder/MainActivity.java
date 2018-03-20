@@ -1,14 +1,24 @@
 package com.alliejc.wcstinder;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import retrofit2.Call;
@@ -28,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private String mSelectedLevel;
     private TabLayout mTabLayout;
-    private List<Dancer> mDancers;
+    private List<Object> mDancers;
+    private DancerAdapter mAdapter;
 
 
     @Override
@@ -39,6 +50,21 @@ public class MainActivity extends AppCompatActivity {
         mDancers = new ArrayList<>();
         setUpUI();
         setUpToolbar();
+        setUpTabs();
+        setUpRecyclerView();
+        getTabData(mTabLayout.getSelectedTabPosition());
+    }
+
+    private void setUpRecyclerView() {
+        mRecyclerView = findViewById(R.id.recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+//        mRecyclerView.setHasFixedSize(true);
+
+        mAdapter = new DancerAdapter(this);
+        mRecyclerView.setAdapter(mAdapter);
+//        mAdapter.updateAdapter(mDancers);
+
     }
 
     private void setUpUI(){
@@ -92,54 +118,40 @@ public class MainActivity extends AppCompatActivity {
     private void getTabData(int tabPosition){
         switch (tabPosition){
             case 0:
-                getLeaders(mSelectedLevel);
+                getDancers(mSelectedLevel, "follower");
                 break;
             case 1:
-                getFollowers(mSelectedLevel);
+                getDancers(mSelectedLevel, "leader");
                 break;
         }
     }
 
-    private void getFollowers(String division) {
-        Call<Dancer> call = APIService.getAPIService().getAllForDivision("follower", division);
-        call.enqueue(new Callback<Dancer>() {
+    private void getDancers(String division, String role) {
+        Call call = APIService.getAPIService().getAllForDivision(role, division);
+        call.enqueue(new Callback() {
             @Override
-            public void onResponse(Call<Dancer> call, Response<Dancer> response) {
+            public void onResponse(Call call, Response response) {
                 if(response.isSuccessful()) {
-                    mDancers.add(response.body());
+                    Log.e("SUCCESS", String.valueOf(response.message()));
+//                    mDancers.addAll(response.body());
+//                    mAdapter.updateAdapter(mDancers);
                 }
             }
 
             @Override
-            public void onFailure(Call<Dancer> call, Throwable t) {
+            public void onFailure(Call call, Throwable t) {
+                Log.e("FAILURE", String.valueOf(call));
+                Log.e("FAILURE", String.valueOf(t));
+                Toast.makeText(MainActivity.this, "Error on response", Toast.LENGTH_SHORT).show();
 
             }
         });
-    }
-
-    private void getLeaders(String division) {
-        Call<Dancer> call = APIService.getAPIService().getAllForDivision("leader", division);
-        call.enqueue(new Callback<Dancer>() {
-            @Override
-            public void onResponse(Call<Dancer> call, Response<Dancer> response) {
-                if(response.isSuccessful()) {
-                    mDancers.add(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Dancer> call, Throwable t) {
-
-            }
-        });
-
     }
 
     private void setUpToolbar() {
         setSupportActionBar(mToolbar);
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
-            bar.setBackgroundDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
             bar.setDisplayHomeAsUpEnabled(false);
             bar.setDisplayShowTitleEnabled(false);
             bar.setElevation(2);

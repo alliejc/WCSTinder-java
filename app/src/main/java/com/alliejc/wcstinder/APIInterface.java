@@ -1,7 +1,10 @@
 package com.alliejc.wcstinder;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -10,8 +13,8 @@ import retrofit2.http.Query;
 
 public interface APIInterface {
 
-    @GET("{division}/{role}/{qualifies}")
-    Call<Dancer> getDancers(@Query("division") String division, @Query("role") String role);
+    @GET("{division}/{role}")
+    Call<List<Dancer>> getDancers(@Path("division") String division, @Path("role") String role);
 
 // APIInterface   @GET("articles/ios_index")
 //    Call<Article> articleList();
