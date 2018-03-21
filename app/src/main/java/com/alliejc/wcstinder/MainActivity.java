@@ -1,5 +1,6 @@
 package com.alliejc.wcstinder;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -7,18 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private String mSelectedLevel;
     private TabLayout mTabLayout;
-    private List<Object> mDancers;
+    private List<Dancer> mDancers;
     private DancerAdapter mAdapter;
 
 
@@ -52,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         setUpToolbar();
         setUpTabs();
         setUpRecyclerView();
-        getTabData(mTabLayout.getSelectedTabPosition());
+//        getTabData(mTabLayout.getSelectedTabPosition());
     }
 
     private void setUpRecyclerView() {
@@ -61,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(linearLayoutManager);
 //        mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new DancerAdapter(this);
-        mRecyclerView.setAdapter(mAdapter);
+            mAdapter = new DancerAdapter(this);
+            mRecyclerView.setAdapter(mAdapter);
 //        mAdapter.updateAdapter(mDancers);
 
     }
@@ -118,31 +114,28 @@ public class MainActivity extends AppCompatActivity {
     private void getTabData(int tabPosition){
         switch (tabPosition){
             case 0:
-                getDancers(mSelectedLevel, "follower");
+                getDancers(mSelectedLevel, "leader");
                 break;
             case 1:
-                getDancers(mSelectedLevel, "leader");
+                getDancers(mSelectedLevel, "follower");
                 break;
         }
     }
 
     private void getDancers(String division, String role) {
         Call call = APIService.getAPIService().getAllForDivision(role, division);
-        call.enqueue(new Callback() {
+        call.enqueue(new Callback<Dancer>() {
             @Override
-            public void onResponse(Call call, Response response) {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 if(response.isSuccessful()) {
-                    Log.e("SUCCESS", String.valueOf(response.message()));
-//                    mDancers.addAll(response.body());
-//                    mAdapter.updateAdapter(mDancers);
+                    List l = (List) response.body();
+                   mAdapter.updateAdapter(l);
                 }
             }
 
             @Override
-            public void onFailure(Call call, Throwable t) {
-                Log.e("FAILURE", String.valueOf(call));
-                Log.e("FAILURE", String.valueOf(t));
-                Toast.makeText(MainActivity.this, "Error on response", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<Dancer> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Oops, there was a problem, check your network connection", Toast.LENGTH_SHORT).show();
 
             }
         });

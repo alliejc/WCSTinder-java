@@ -46,7 +46,8 @@
                 android:id="@+id/newcomer_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/newcomer" />
+                android:text="@string/newcomer"
+                android:focusedByDefault="true"/>
             <RadioButton
                 android:id="@+id/novice_radio_button"
                 android:layout_width="wrap_content"

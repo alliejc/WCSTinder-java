@@ -10,15 +10,18 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by acaldwell on 3/18/18.
  */
 
 public class DancerAdapter extends RecyclerView.Adapter<DancerViewHolder> {
     private Context mContext;
-    private List<Dancer> mDancerList = new ArrayList<>();
+    private List<Dancer> mDancerList;
+
     public DancerAdapter(Context context) {
         this.mContext = context;
+        this.mDancerList = new ArrayList<>();
     }
 
     @NonNull
@@ -31,7 +34,7 @@ public class DancerAdapter extends RecyclerView.Adapter<DancerViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull DancerViewHolder holder, int position) {
-        Dancer dancer = (Dancer) mDancerList.get(holder.getAdapterPosition());
+        Dancer dancer = mDancerList.get(holder.getAdapterPosition());
         holder.onBind(mContext, dancer);
     }
 
@@ -40,7 +43,7 @@ public class DancerAdapter extends RecyclerView.Adapter<DancerViewHolder> {
         return mDancerList.size();
     }
 
-    public void updateAdapter(List<Dancer> list){
+    public void updateAdapter(List list){
         mDancerList = list;
         notifyDataSetChanged();
     }

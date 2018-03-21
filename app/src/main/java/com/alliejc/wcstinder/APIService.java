@@ -42,12 +42,4 @@ public class APIService {
     public Call getAllForDivision(String role, String division){
         return mInterface.getDancers(division, role);
     }
-
-//    public Call getFollows(){
-//        return mInterface.followsList();
-//    }
-//
-//    public Call getLeaders(){
-//        return mInterface.leadersList();
-//    }
 }

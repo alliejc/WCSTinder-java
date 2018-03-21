@@ -12,14 +12,23 @@ import android.widget.TextView;
 
 public class DancerViewHolder extends RecyclerView.ViewHolder {
     private TextView mName;
+    private TextView mPoints;
+
     public DancerViewHolder(View itemView) {
         super(itemView);
-        mName = itemView.findViewById(R.id.name_text);
+        mName = (TextView) itemView.findViewById(R.id.name_text);
+        mPoints = (TextView) itemView.findViewById(R.id.point_text);
     }
 
     public void onBind(Context context, Dancer dancer){
-        Log.e("VIEW HOLDER", dancer.getFirstName());
-        mName.setText(dancer.getFirstName() + dancer.getLastName());
+        if(dancer != null) {
+            mName.setText(dancer.getFirstName() + " " + dancer.getLastName());
+            if(dancer.getCurrentPoints() != null) {
+                mPoints.setText(String.valueOf(dancer.getCurrentPoints()));
+            } else {
+                mPoints.setText("0");
+            }
+        }
 
     }
 }

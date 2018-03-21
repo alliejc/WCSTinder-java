@@ -15,13 +15,4 @@ public interface APIInterface {
 
     @GET("{division}/{role}")
     Call<List<Dancer>> getDancers(@Path("division") String division, @Path("role") String role);
-
-// APIInterface   @GET("articles/ios_index")
-//    Call<Article> articleList();
-//
-//    @GET("articles/ios_index")
-//    Call<Article> articlesNextPage(@Query("page") int page);
-//
-//    @GET("merchandise/marquee")
-//    Call<SavedSearch> savedSearchList();
 }
