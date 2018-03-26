@@ -6,4 +6,7 @@
     <string name="intermediate">Intermediate</string>
     <string name="advanced">Advanced</string>
     <string name="all_star">All-Star</string>
+
+    <string name="facebook_app_id">602445503431907</string>
+    <string name="fb_login_protocol_scheme">fb602445503431907</string>
 </resources>

@@ -49,7 +49,8 @@ dependencies {
     implementation 'javax.inject:javax.inject:1'
     implementation 'com.squareup.okhttp:okhttp:2.5.0'
     implementation 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
-
+    implementation 'com.facebook.android:facebook-login:4.31.0'
+    implementation 'com.android.support:multidex:1.0.3'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

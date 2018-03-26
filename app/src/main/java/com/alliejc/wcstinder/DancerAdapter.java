@@ -18,10 +18,12 @@ import java.util.List;
 public class DancerAdapter extends RecyclerView.Adapter<DancerViewHolder> {
     private Context mContext;
     private List<Dancer> mDancerList;
+    private IOnSelected mListener;
 
-    public DancerAdapter(Context context) {
+    public DancerAdapter(Context context, IOnSelected listener) {
         this.mContext = context;
         this.mDancerList = new ArrayList<>();
+        this.mListener = listener;
     }
 
     @NonNull
@@ -35,7 +37,7 @@ public class DancerAdapter extends RecyclerView.Adapter<DancerViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull DancerViewHolder holder, int position) {
         Dancer dancer = mDancerList.get(holder.getAdapterPosition());
-        holder.onBind(mContext, dancer);
+        holder.onBind(mContext, dancer, mListener);
     }
 
     @Override
