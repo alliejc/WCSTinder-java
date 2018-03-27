@@ -1,4 +1,4 @@
-package com.alliejc.wcstinder;
+package com.alliejc.wcstinder.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,6 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.alliejc.wcstinder.R;
+import com.alliejc.wcstinder.callback.IOnSelected;
+import com.alliejc.wcstinder.trackmyswing.Dancer;
+import com.alliejc.wcstinder.viewholder.DancerViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

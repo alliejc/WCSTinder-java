@@ -1,11 +1,14 @@
-package com.alliejc.wcstinder;
+package com.alliejc.wcstinder.viewholder;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.alliejc.wcstinder.trackmyswing.Dancer;
+import com.alliejc.wcstinder.R;
+import com.alliejc.wcstinder.callback.IOnSelected;
 
 /**
  * Created by acaldwell on 3/18/18.

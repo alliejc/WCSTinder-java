@@ -1,4 +1,4 @@
-package com.alliejc.wcstinder;
+package com.alliejc.wcstinder.trackmyswing;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

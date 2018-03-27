@@ -1,11 +1,12 @@
-package com.alliejc.wcstinder;
+package com.alliejc.wcstinder.trackmyswing;
+
+import com.alliejc.wcstinder.trackmyswing.Dancer;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
  * Created by acaldwell on 3/18/18.

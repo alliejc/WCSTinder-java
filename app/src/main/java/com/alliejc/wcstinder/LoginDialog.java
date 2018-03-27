@@ -2,12 +2,14 @@ package com.alliejc.wcstinder;
 
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -49,6 +51,12 @@ public class LoginDialog extends DialogFragment{
                 mLoginText.setText("User ID:  " +
                         loginResult.getAccessToken().getUserId() + "\n" +
                         "Auth Token: " + loginResult.getAccessToken().getToken());
+
+                if(isFacebookAppInstalled()){
+                    Toast.makeText(getApplicationContext(), "installed", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "not installed", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -68,5 +76,14 @@ public class LoginDialog extends DialogFragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public boolean isFacebookAppInstalled() {
+        try {
+            getApplicationContext().getPackageManager().getApplicationInfo("com.facebook.katana", 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 }

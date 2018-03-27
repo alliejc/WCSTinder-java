@@ -1,5 +1,5 @@
 
-package com.alliejc.wcstinder;
+package com.alliejc.wcstinder.trackmyswing;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
