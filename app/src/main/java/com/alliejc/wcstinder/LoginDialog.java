@@ -1,16 +1,20 @@
 package com.alliejc.wcstinder;
 
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alliejc.wcstinder.callback.ICallback;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -27,12 +31,14 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 
 public class LoginDialog extends DialogFragment{
+    private static final String EMAIL = "email";
+    private static final String TAG = LoginDialog.class.getSimpleName();
+
     private LoginButton mLoginButton;
     private TextView mLoginText;
-
-
+    private ICallback mCallback;
     private CallbackManager mCallbackManager;
-    private static final String EMAIL = "email";
+
 
     @Nullable
     @Override
@@ -52,11 +58,7 @@ public class LoginDialog extends DialogFragment{
                         loginResult.getAccessToken().getUserId() + "\n" +
                         "Auth Token: " + loginResult.getAccessToken().getToken());
 
-                if(isFacebookAppInstalled()){
-                    Toast.makeText(getApplicationContext(), "installed", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "not installed", Toast.LENGTH_LONG).show();
-                }
+                mCallback.onCompleted((String) loginResult.getAccessToken().getUserId());
             }
 
             @Override
@@ -67,6 +69,7 @@ public class LoginDialog extends DialogFragment{
             @Override
             public void onError(FacebookException error) {
                 mLoginText.setText("Login attempt failed.");
+                mCallback.onError((String) error.getMessage());
             }
         });
         return root;
@@ -78,12 +81,13 @@ public class LoginDialog extends DialogFragment{
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public boolean isFacebookAppInstalled() {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            getApplicationContext().getPackageManager().getApplicationInfo("com.facebook.katana", 0);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
+            mCallback = (ICallback) getActivity();
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
         }
     }
 }

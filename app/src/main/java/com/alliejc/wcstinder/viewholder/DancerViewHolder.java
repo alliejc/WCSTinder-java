@@ -43,7 +43,7 @@ public class DancerViewHolder extends RecyclerView.ViewHolder {
             mContactButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onDancerSelected(dancer.getFirstName());
+                    listener.onDancerSelected(dancer.getFirstName() + " " + dancer.getLastName());
                 }
             });
         }

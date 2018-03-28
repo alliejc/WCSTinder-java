@@ -1,6 +1,8 @@
 package com.alliejc.wcstinder;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Trace;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 
 import com.alliejc.wcstinder.adapter.DancerAdapter;
+import com.alliejc.wcstinder.callback.ICallback;
 import com.alliejc.wcstinder.callback.IOnSelected;
 import com.alliejc.wcstinder.trackmyswing.APIService;
 import com.alliejc.wcstinder.trackmyswing.Dancer;
@@ -32,9 +35,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+import static com.facebook.FacebookSdk.getApplicationContext;
+
+public class MainActivity extends AppCompatActivity implements ICallback{
 
     public static final String TAG = MainActivity.class.getSimpleName();
+    public static String FACEBOOK_URL = "";
 
     public static final String NEWCOMER = "newcomer";
     public static final String NOVICE = "novice";
@@ -53,9 +59,10 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private List<Dancer> mDancers;
     private DancerAdapter mAdapter;
-    private CacheUtil mCacheUtil;
-    private boolean mCacheDancersData = false;
-    private String mEntryKey = "DancersCache";
+//    private CacheUtil mCacheUtil;
+//    private boolean mCacheDancersData = false;
+//    private String mEntryKey = "DancersCache";
+    private String mSearchName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         setUpTabs();
         setUpRecyclerView();
         mRadioGroup.check(R.id.newcomer_radio_button);
-        initCacheProvider();
         getDancers(mSelectedLevel, mSelectedRole);
     }
 
@@ -87,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDancerSelected(String name) {
                     setUpLoginDialog();
+                    mSearchName = name;
                 }
             });
             mRecyclerView.setAdapter(mAdapter);
@@ -103,23 +110,23 @@ public class MainActivity extends AppCompatActivity {
                 switch (checkedId) {
                     case R.id.newcomer_radio_button:
                         mSelectedLevel = NEWCOMER;
-                        getData(false);
+                        getDancers(mSelectedLevel, mSelectedRole);
                         break;
                     case R.id.novice_radio_button:
                         mSelectedLevel = NOVICE;
-                        getData(false);
+                        getDancers(mSelectedLevel, mSelectedRole);
                         break;
                     case R.id.intermediate_radio_button:
                         mSelectedLevel = INTERMEDIATE;
-                        getData(false);
+                        getDancers(mSelectedLevel, mSelectedRole);
                         break;
                     case R.id.advanced_radio_button:
                         mSelectedLevel = ADVANCED;
-                        getData(false);
+                        getDancers(mSelectedLevel, mSelectedRole);
                         break;
                     case R.id.allstar_radio_button:
                         mSelectedLevel = ALL_STAR;
-                        getData(false);
+                        getDancers(mSelectedLevel, mSelectedRole);
                         break;
                 }
             }
@@ -149,46 +156,16 @@ public class MainActivity extends AppCompatActivity {
         switch (tabPosition){
             case 0:
                 mSelectedRole = LEADER;
-                getData(false);
+                getDancers(mSelectedLevel, mSelectedRole);
                 break;
             case 1:
                 mSelectedRole = FOLLOW;
-                getData(false);
+                getDancers(mSelectedLevel, mSelectedRole);
                 break;
         }
     }
 
-    private void getData(Boolean ignoreCacheExpiry){
-        List<Dancer> allDancerList = DancerCache.getInstance().getAllDancers();
-        if (allDancerList != null && allDancerList.size() > 0) {
-            mAdapter.updateAdapter(allDancerList);
-        } else  if (mCacheUtil != null){
-            allDancerList = mCacheUtil.getDataFromCache(ignoreCacheExpiry, mEntryKey);
-            if (allDancerList != null) {
-                mAdapter.updateAdapter(allDancerList);
-            }
-        } else {
-            getDancers(mSelectedLevel, mSelectedRole);
-        }
-    }
-
-    private void initCacheProvider() {
-        mCacheUtil = new CacheUtil(getApplicationContext());
-        mCacheUtil.initCacheProvider(mEntryKey);
-    }
-
-    public void cacheDancers(List<Dancer> drugs) {
-        if (drugs != null && mCacheUtil != null) {
-            if (mCacheDancersData) {
-                mCacheUtil.setExpiryTime(System.currentTimeMillis() + 24 * 60 * 60 * 1000 * 7);     //7days
-                mCacheUtil.saveDataToCache(drugs, mEntryKey);
-            } else {
-                DancerCache.getInstance().setIsDancerReadFromResourceFile(true);
-            }
-            DancerCache.getInstance().setAllDrugs(drugs);
-        }
-    }
-
+    //TODO: implement cache headers
     private void getDancers(String division, String role) {
         Call call = APIService.getAPIService().getAllForDivision(role, division);
         call.enqueue(new Callback<Dancer>() {
@@ -196,10 +173,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 if(response.isSuccessful()) {
                     List l = (List) response.body();
-                    mCacheDancersData = true;
-                    cacheDancers(l);
                     mAdapter.updateAdapter(l);
-
                 }
             }
 
@@ -218,5 +192,35 @@ public class MainActivity extends AppCompatActivity {
             bar.setDisplayShowTitleEnabled(false);
             bar.setElevation(2);
         }
+    }
+
+    private void launchFBIntent(){
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL));
+        startActivity(intent);
+    }
+
+    private String getFacebookSearchURL(String username) {
+        PackageManager packageManager = getApplicationContext().getPackageManager();
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) { //newer versions of fb app
+                return "fb://facewebmodal/f?href=" + username;
+            } else { //older versions of fb app
+                return "fb://search/" + username;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return  "https://www.facebook.com/search/top/?q=" + username; //normal web url
+        }
+    }
+
+    @Override
+    public void onError(Object obj) {
+
+    }
+
+    @Override
+    public void onCompleted(Object obj) {
+        FACEBOOK_URL = getFacebookSearchURL(mSearchName);
+        launchFBIntent();
     }
 }
