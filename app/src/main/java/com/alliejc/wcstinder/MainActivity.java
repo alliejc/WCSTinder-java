@@ -1,5 +1,7 @@
 package com.alliejc.wcstinder;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -24,6 +26,8 @@ import com.alliejc.wcstinder.trackmyswing.APIService;
 import com.alliejc.wcstinder.trackmyswing.Dancer;
 import com.alliejc.wcstinder.util.CacheUtil;
 import com.alliejc.wcstinder.util.DancerCache;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
 
 import java.text.DateFormat;
@@ -59,16 +63,29 @@ public class MainActivity extends AppCompatActivity implements ICallback{
     private TabLayout mTabLayout;
     private List<Dancer> mDancers;
     private DancerAdapter mAdapter;
-//    private CacheUtil mCacheUtil;
-//    private boolean mCacheDancersData = false;
-//    private String mEntryKey = "DancersCache";
     private String mSearchName = "";
+    private AccessToken mAccessToken;
+    private AccessTokenTracker mAccessTokenTracker;
+    private ClipboardManager myClipboard;
+    private ClipData mClipData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+
+        myClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+
+
+        mAccessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                mAccessToken = currentAccessToken;
+            }
+        };
+
+        mAccessTokenTracker.startTracking();
 
         mDancers = new ArrayList<>();
         setUpUI();
@@ -80,9 +97,17 @@ public class MainActivity extends AppCompatActivity implements ICallback{
     }
 
     private void setUpLoginDialog() {
-        android.app.FragmentManager fm = getFragmentManager();
-        LoginDialog dialogFragment = new LoginDialog ();
-        dialogFragment.show(fm, "Login Dialog");    }
+        mAccessToken = AccessToken.getCurrentAccessToken();
+
+        if (mAccessToken == null || mAccessToken.isExpired()) {
+            android.app.FragmentManager fm = getFragmentManager();
+            LoginDialog dialogFragment = new LoginDialog();
+            dialogFragment.show(fm, "Login Dialog");
+        } else {
+            FACEBOOK_URL = getFacebookSearchURL(mSearchName);
+            launchFBIntent();
+        }
+    }
 
     private void setUpRecyclerView() {
         mRecyclerView = findViewById(R.id.recycler_view);
@@ -92,10 +117,12 @@ public class MainActivity extends AppCompatActivity implements ICallback{
             mAdapter = new DancerAdapter(this, new IOnSelected() {
                 @Override
                 public void onDancerSelected(String name) {
-                    setUpLoginDialog();
                     mSearchName = name;
+                    mClipData = ClipData.newPlainText("search_name", name);
+                    setUpLoginDialog();
                 }
             });
+
             mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -195,31 +222,33 @@ public class MainActivity extends AppCompatActivity implements ICallback{
     }
 
     private void launchFBIntent(){
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL));
+        myClipboard.setPrimaryClip(mClipData);
+        Toast.makeText(getApplicationContext(), mSearchName + " " + "saved to clipboard", Toast.LENGTH_LONG).show();
+
+        FACEBOOK_URL = getFacebookSearchURL(mSearchName);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(FACEBOOK_URL));
         startActivity(intent);
     }
 
-    private String getFacebookSearchURL(String username) {
+    private String getFacebookSearchURL(String searchName) {
         PackageManager packageManager = getApplicationContext().getPackageManager();
         try {
-            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
-            if (versionCode >= 3002850) { //newer versions of fb app
-                return "fb://facewebmodal/f?href=" + username;
-            } else { //older versions of fb app
-                return "fb://search/" + username;
-            }
+//            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            return "fb://search/";
+
         } catch (PackageManager.NameNotFoundException e) {
-            return  "https://www.facebook.com/search/top/?q=" + username; //normal web url
+            return  "https://www.facebook.com/search/people/?q=" + searchName; //normal web url
         }
     }
 
     @Override
     public void onError(Object obj) {
-
     }
 
     @Override
     public void onCompleted(Object obj) {
+        mAccessToken = (AccessToken) obj;
         FACEBOOK_URL = getFacebookSearchURL(mSearchName);
         launchFBIntent();
     }

@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alliejc.wcstinder.callback.ICallback;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -39,7 +41,6 @@ public class LoginDialog extends DialogFragment{
     private ICallback mCallback;
     private CallbackManager mCallbackManager;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -54,11 +55,11 @@ public class LoginDialog extends DialogFragment{
         mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                mLoginText.setText("User ID:  " +
-                        loginResult.getAccessToken().getUserId() + "\n" +
-                        "Auth Token: " + loginResult.getAccessToken().getToken());
+//                mLoginText.setText("User ID:  " +
+//                        loginResult.getAccessToken().getUserId() + "\n" +
+//                        "Auth Token: " + loginResult.getAccessToken().getToken());
 
-                mCallback.onCompleted((String) loginResult.getAccessToken().getUserId());
+                mCallback.onCompleted((AccessToken) loginResult.getAccessToken());
             }
 
             @Override

@@ -47,7 +47,5 @@ public class DancerViewHolder extends RecyclerView.ViewHolder {
                 }
             });
         }
-
-
     }
 }
