@@ -21,8 +21,9 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:layout_margin="5dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"/>
+                android:text="name"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true" />
 
             <TextView
                 android:id="@+id/level_text"
@@ -30,17 +31,19 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:layout_margin="5dp"
-                android:layout_toLeftOf="@+id/point_text"
-                android:layout_centerVertical="true"/>
+                android:text="level"
+                android:layout_below="@+id/name_text"/>
 
             <TextView
                 android:id="@+id/point_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:layout_margin="5dp"
-                android:layout_toLeftOf="@id/contact_button"
-                android:layout_centerVertical="true"/>
+                android:text="points"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_below="@+id/name_text"
+                android:layout_toRightOf="@id/level_text" />
 
             <ImageButton
                 android:id="@+id/contact_button"

@@ -9,4 +9,5 @@
 
     <string name="facebook_app_id">602445503431907</string>
     <string name="fb_login_protocol_scheme">fb602445503431907</string>
+    <string name="toolbar_title">WCS Strictly Finder</string>
 </resources>

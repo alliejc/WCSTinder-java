@@ -24,8 +24,7 @@ import com.alliejc.wcstinder.callback.ICallback;
 import com.alliejc.wcstinder.callback.IOnSelected;
 import com.alliejc.wcstinder.trackmyswing.APIService;
 import com.alliejc.wcstinder.trackmyswing.Dancer;
-import com.alliejc.wcstinder.util.CacheUtil;
-import com.alliejc.wcstinder.util.DancerCache;
+import com.alliejc.wcstinder.util.Constants;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
@@ -39,21 +38,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.alliejc.wcstinder.util.Constants.ADVANCED;
+import static com.alliejc.wcstinder.util.Constants.ALL_STAR;
+import static com.alliejc.wcstinder.util.Constants.FACEBOOK_URL;
+import static com.alliejc.wcstinder.util.Constants.FOLLOW;
+import static com.alliejc.wcstinder.util.Constants.INTERMEDIATE;
+import static com.alliejc.wcstinder.util.Constants.LEADER;
+import static com.alliejc.wcstinder.util.Constants.NEWCOMER;
+import static com.alliejc.wcstinder.util.Constants.NOVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class MainActivity extends AppCompatActivity implements ICallback{
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public static String FACEBOOK_URL = "";
-
-    public static final String NEWCOMER = "newcomer";
-    public static final String NOVICE = "novice";
-    public static final String INTERMEDIATE = "intermediate";
-    public static final String ADVANCED = "advanced";
-    public static final String ALL_STAR = "allstar";
-
-    public static final String LEADER = "leader";
-    public static final String FOLLOW = "follower";
 
     private Toolbar mToolbar;
     private RadioGroup mRadioGroup;
@@ -206,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements ICallback{
 
             @Override
             public void onFailure(Call<Dancer> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Oops, there was a problem, check your network connection", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Oops, there was a problem, check your network connection", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -216,14 +213,17 @@ public class MainActivity extends AppCompatActivity implements ICallback{
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
             bar.setDisplayHomeAsUpEnabled(false);
-            bar.setDisplayShowTitleEnabled(false);
+            bar.setDisplayShowTitleEnabled(true);
+            bar.setTitle(R.string.toolbar_title);
             bar.setElevation(2);
         }
     }
 
     private void launchFBIntent(){
-        myClipboard.setPrimaryClip(mClipData);
-        Toast.makeText(getApplicationContext(), mSearchName + " " + "saved to clipboard", Toast.LENGTH_LONG).show();
+        if(FACEBOOK_URL.equalsIgnoreCase("fb://search/")) {
+            myClipboard.setPrimaryClip(mClipData);
+            Toast.makeText(getApplicationContext(), mSearchName + " " + "saved to clipboard", Toast.LENGTH_LONG).show();
+        }
 
         FACEBOOK_URL = getFacebookSearchURL(mSearchName);
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements ICallback{
     private String getFacebookSearchURL(String searchName) {
         PackageManager packageManager = getApplicationContext().getPackageManager();
         try {
-//            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
             return "fb://search/";
 
         } catch (PackageManager.NameNotFoundException e) {
