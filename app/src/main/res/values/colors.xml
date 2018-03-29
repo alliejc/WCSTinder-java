@@ -7,5 +7,6 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="background_grey">#fafafa</color>
+    <color name="fb_blue">#0084ff</color>
 
 </resources>

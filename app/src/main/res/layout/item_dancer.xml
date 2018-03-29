@@ -8,7 +8,10 @@
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="5dp"
         app:cardElevation="2dp"
-        android:layout_margin="5dp">
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -50,10 +53,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_margin="5dp"
-                android:src="@drawable/ic_message"
-                android:background="@android:color/transparent"
-                android:layout_centerVertical="true"/>
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_messenger_icon"
+                android:tint="@color/fb_blue"
+                android:layout_centerVertical="true"
+                android:background="?android:attr/selectableItemBackground"
+                />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
