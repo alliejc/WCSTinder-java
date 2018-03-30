@@ -15,6 +15,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -28,6 +31,8 @@ import com.alliejc.wcstinder.util.Constants;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -65,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements ICallback{
     private AccessTokenTracker mAccessTokenTracker;
     private ClipboardManager myClipboard;
     private ClipData mClipData;
+    private ExpandableLayout mExpandableLayout;
+    private ImageView mExpandCollapseIcon;
+    private View mSelectALevelHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +134,16 @@ public class MainActivity extends AppCompatActivity implements ICallback{
         mToolbar = findViewById(R.id.toolbar);
         mRadioGroup = findViewById(R.id.level_radio_group);
         mRecyclerView = findViewById(R.id.recycler_view);
+        mExpandableLayout = findViewById(R.id.expandable_layout);
+        mExpandCollapseIcon = findViewById(R.id.expand_collapse_icon);
+        mSelectALevelHeader = findViewById(R.id.select_level_header);
+
+        mSelectALevelHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleExpandableLayout();
+            }
+        });
 
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -133,27 +151,42 @@ public class MainActivity extends AppCompatActivity implements ICallback{
                 switch (checkedId) {
                     case R.id.newcomer_radio_button:
                         mSelectedLevel = NEWCOMER;
+                        toggleExpandableLayout();
                         getDancers(mSelectedLevel, mSelectedRole);
                         break;
                     case R.id.novice_radio_button:
                         mSelectedLevel = NOVICE;
+                        toggleExpandableLayout();
                         getDancers(mSelectedLevel, mSelectedRole);
                         break;
                     case R.id.intermediate_radio_button:
                         mSelectedLevel = INTERMEDIATE;
+                        toggleExpandableLayout();
                         getDancers(mSelectedLevel, mSelectedRole);
                         break;
                     case R.id.advanced_radio_button:
                         mSelectedLevel = ADVANCED;
+                        toggleExpandableLayout();
                         getDancers(mSelectedLevel, mSelectedRole);
                         break;
                     case R.id.allstar_radio_button:
                         mSelectedLevel = ALL_STAR;
+                        toggleExpandableLayout();
                         getDancers(mSelectedLevel, mSelectedRole);
                         break;
                 }
             }
         });
+    }
+
+    private void toggleExpandableLayout(){
+        if(mExpandableLayout.isExpanded()){
+            mExpandableLayout.collapse();
+            mExpandCollapseIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_more));
+        } else {
+            mExpandableLayout.expand();
+            mExpandCollapseIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
+        }
     }
 
     private void setUpTabs(){
