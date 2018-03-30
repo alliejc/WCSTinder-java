@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:background="@color/background_grey">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/select_level_text"
@@ -48,26 +48,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/newcomer"
+                android:textSize="15sp"
                 android:focusedByDefault="true"/>
             <RadioButton
                 android:id="@+id/novice_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="15sp"
                 android:text="@string/novice"/>
             <RadioButton
                 android:id="@+id/intermediate_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="15sp"
                 android:text="@string/intermediate"/>
             <RadioButton
                 android:id="@+id/advanced_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="15sp"
                 android:text="@string/advanced"/>
             <RadioButton
                 android:id="@+id/allstar_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="15sp"
                 android:text="@string/all_star"/>
         </RadioGroup>
 
@@ -84,19 +89,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusedByDefault="true"
+                android:textSize="20sp"
                 android:text="Leader" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/follow_toggle_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="20sp"
                 android:text="Follower" />
         </android.support.design.widget.TabLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

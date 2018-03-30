@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements ICallback{
 
         myClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
 
-
         mAccessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
