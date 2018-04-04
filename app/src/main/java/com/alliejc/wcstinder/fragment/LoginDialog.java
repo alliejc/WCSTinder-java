@@ -1,10 +1,8 @@
-package com.alliejc.wcstinder;
+package com.alliejc.wcstinder.fragment;
 
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -12,25 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.alliejc.wcstinder.R;
 import com.alliejc.wcstinder.callback.ICallback;
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 import java.util.Arrays;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
-
-/**
- * Created by acaldwell on 3/26/18.
- */
 
 public class LoginDialog extends DialogFragment{
     private static final String EMAIL = "email";

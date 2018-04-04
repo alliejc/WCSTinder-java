@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.alliejc.wcstinder.MainActivity">
+    tools:context="com.alliejc.wcstinder.activity.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -73,31 +73,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/newcomer"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:focusedByDefault="true"/>
             <RadioButton
                 android:id="@+id/novice_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:text="@string/novice"/>
             <RadioButton
                 android:id="@+id/intermediate_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:text="@string/intermediate"/>
             <RadioButton
                 android:id="@+id/advanced_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:text="@string/advanced"/>
             <RadioButton
                 android:id="@+id/allstar_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:text="@string/all_star"/>
         </RadioGroup>
         </net.cachapa.expandablelayout.ExpandableLayout>

@@ -12,6 +12,8 @@ import com.alliejc.wcstinder.callback.IOnSelected;
 import com.alliejc.wcstinder.trackmyswing.Dancer;
 import com.alliejc.wcstinder.viewholder.DancerViewHolder;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,11 @@ public class DancerAdapter extends RecyclerView.Adapter<DancerViewHolder> {
 
     public void updateAdapter(List list){
         mDancerList = list;
+        notifyDataSetChanged();
+    }
+
+    public void updateAdapter(@Nullable Dancer dancer) {
+        mDancerList.add(dancer);
         notifyDataSetChanged();
     }
 }
