@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.widget.Toast
+import com.alliejc.wcstinder.DancerComparator
 import com.alliejc.wcstinder.R
 import com.alliejc.wcstinder.adapter.DancerAdapter
 import com.alliejc.wcstinder.callback.IOnSelected
@@ -29,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -192,12 +194,18 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<MutableList<Dancer>>, response: Response<MutableList<Dancer>>) {
                 if (response.isSuccessful){
                     Log.e(TAG, response.message())
-                    mAdapter!!.updateAdapter(response.body())
+                    var list = sortByRelevance(response.body())
+                    mAdapter!!.updateAdapter(list)
                 }
             }
         })
     }
 }
+
+ private fun sortByRelevance(list: MutableList<Dancer>?):MutableList<Dancer>? {
+        Collections.sort(list, DancerComparator())
+        return list
+    }
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) {
     val fragmentTransaction = beginTransaction()
