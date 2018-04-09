@@ -26,5 +26,8 @@ data class Dancer (
         @Expose var qualifiesForNextDivision: Boolean,
 
         @SerializedName("DivisionRoleQualifies")
-        @Expose var divisionRoleQualifies: String
+        @Expose var divisionRoleQualifies: String,
+
+        @SerializedName("Relevance")
+        @Expose var relevance: Int
 )
