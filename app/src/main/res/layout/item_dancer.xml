@@ -14,9 +14,9 @@
                 android:textColor="@color/black"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="15dp"
                 android:text="name"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true" />
 
@@ -27,8 +27,8 @@
                 android:textColor="@color/black"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:textSize="12sp"
+                android:layout_marginLeft="30dp"
+                android:textSize="15sp"
                 android:text="level"
                 android:layout_below="@+id/name_text"/>
 
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:text="points"
-                android:textSize="12sp"
+                android:textSize="15sp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_below="@+id/name_text"
@@ -51,7 +51,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="30dp"
                 android:src="@drawable/ic_messenger_icon"
                 android:tint="@color/fb_blue"
                 android:layout_centerVertical="true"

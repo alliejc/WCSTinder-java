@@ -29,7 +29,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -71,10 +70,9 @@ class MainActivity : AppCompatActivity() {
     private fun setUpLoginDialog() {
         mAccessToken = AccessToken.getCurrentAccessToken()
 
-        if (mAccessToken != null || mAccessToken!!.isExpired) {
-           val fragment = LoginDialog.instantiate(this, "Login Dialog")
+        if (mAccessToken != null) {
             fragmentManager.inTransaction {
-                add(fragment, "Login Dialog")
+                add(LoginDialog(), "Login Dialog")
             }
         } else {
             FACEBOOK_URL = getFacebookSearchURL(mSearchName)
@@ -91,6 +89,7 @@ class MainActivity : AppCompatActivity() {
             mClipData = ClipData.newPlainText("search_name", name)
             setUpLoginDialog()
         })
+        recycler_view.adapter = mAdapter
     }
 
     private fun setClickListeners() {
@@ -185,20 +184,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun getDancers(division: String, role: String) {
         var call = APIService.getAPIService().getAllForDivision(role, division)
-        call.enqueue(object : Callback<Dancer> {
-            override fun onFailure(call: Call<Dancer>?, t: Throwable?) {
+        call.enqueue(object : Callback<MutableList<Dancer>> {
+            override fun onFailure(call: Call<MutableList<Dancer>>, t: Throwable?) {
                 Log.e(TAG, t!!.message)
             }
 
-            override fun onResponse(call: Call<Dancer>?, response: Response<Dancer>?) {
-                if (response!!.isSuccessful){
+            override fun onResponse(call: Call<MutableList<Dancer>>, response: Response<MutableList<Dancer>>) {
+                if (response.isSuccessful){
+                    Log.e(TAG, response.message())
                     mAdapter!!.updateAdapter(response.body())
                 }
             }
-
         })
     }
-
 }
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) {

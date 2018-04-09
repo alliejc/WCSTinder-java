@@ -1,12 +1,30 @@
 package com.alliejc.wcstinder.trackmyswing
 
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
+
 data class Dancer (
-        var firstName: String,
-        var lastName: String,
-        var wSCID: Int,
-        var currentPoints: Int,
-        var division: String,
-        var role: String,
-        var qualifiesForNextDivision: Boolean,
-        var divisionRoleQualifies: String
+        @SerializedName("FirstName")
+        @Expose var firstName: String,
+
+        @SerializedName("LastName")
+        @Expose var lastName: String,
+
+        @SerializedName("WSCID")
+        @Expose var wSCID: Int,
+
+        @SerializedName("CurrentPoints")
+        @Expose var currentPoints: Int,
+
+        @SerializedName("Division")
+        @Expose var division: String,
+
+        @SerializedName("Role")
+        @Expose var role: String,
+
+        @SerializedName("QualifiesForNextDivision")
+        @Expose var qualifiesForNextDivision: Boolean,
+
+        @SerializedName("DivisionRoleQualifies")
+        @Expose var divisionRoleQualifies: String
 )
