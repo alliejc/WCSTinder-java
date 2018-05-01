@@ -21,6 +21,7 @@ class DancerAdapter(context: Context, listener:IOnSelected): RecyclerView.Adapte
     }
 
     override fun onBindViewHolder(holder: DancerViewHolder, position: Int) {
+
         var dancer = mDancerList?.get(holder.adapterPosition)
         holder.onBind(mContext, dancer, mListener)
     }

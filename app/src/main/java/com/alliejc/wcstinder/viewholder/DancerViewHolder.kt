@@ -13,9 +13,10 @@ import kotlinx.android.synthetic.main.item_dancer.view.*
 class DancerViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     fun onBind(context: Context, dancer: Dancer?, listener:IOnSelected){
         if(dancer != null){
-            itemView.name_text.text = dancer.firstName + " " + dancer.lastName
+            itemView.name_text.text = dancer.firstName.plus(" ").plus(dancer.lastName)
             itemView.level_text.text = dancer.division
-            itemView.point_text.text = ": " + dancer.currentPoints.toString()
+            itemView.point_text.text = ": ".plus(dancer.currentPoints.toString())
+            itemView.relevance_text.text = dancer.relevance.toString()
         } else {
             itemView.point_text.text = ": 0"
         }

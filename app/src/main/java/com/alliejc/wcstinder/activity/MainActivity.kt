@@ -19,6 +19,7 @@ import com.alliejc.wcstinder.DancerComparator
 import com.alliejc.wcstinder.R
 import com.alliejc.wcstinder.adapter.DancerAdapter
 import com.alliejc.wcstinder.callback.IOnSelected
+import com.alliejc.wcstinder.ext.inTransaction
 import com.alliejc.wcstinder.fragment.LoginDialog
 import com.alliejc.wcstinder.trackmyswing.APIService
 import com.alliejc.wcstinder.trackmyswing.Dancer
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        mAccessTokenTracker!!.startTracking()
+        mAccessTokenTracker?.startTracking()
         mClipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
         setUpToolbar()
@@ -165,7 +166,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun launchFBIntent() {
         if (FACEBOOK_URL.equals("fb://search/")) {
-            mClipboard!!.primaryClip = mClipData
+            mClipboard?.primaryClip = mClipData
             Toast.makeText(applicationContext, mSearchName + " " + "saved to clipboard", Toast.LENGTH_LONG).show()
         }
 
@@ -188,14 +189,14 @@ class MainActivity : AppCompatActivity() {
         var call = APIService.getAPIService().getAllForDivision(role, division)
         call.enqueue(object : Callback<MutableList<Dancer>> {
             override fun onFailure(call: Call<MutableList<Dancer>>, t: Throwable?) {
-                Log.e(TAG, t!!.message)
+                Log.e(TAG, t?.message)
             }
 
             override fun onResponse(call: Call<MutableList<Dancer>>, response: Response<MutableList<Dancer>>) {
                 if (response.isSuccessful){
                     Log.e(TAG, response.message())
                     var list = sortByRelevance(response.body())
-                    mAdapter!!.updateAdapter(list)
+                    mAdapter?.updateAdapter(list)
                 }
             }
         })
@@ -206,9 +207,3 @@ class MainActivity : AppCompatActivity() {
         Collections.sort(list, DancerComparator())
         return list
     }
-
-inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) {
-    val fragmentTransaction = beginTransaction()
-    fragmentTransaction.func()
-    fragmentTransaction.commit()
-}
