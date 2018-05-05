@@ -16,7 +16,6 @@ class DancerViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             itemView.name_text.text = dancer.firstName.plus(" ").plus(dancer.lastName)
             itemView.level_text.text = dancer.division
             itemView.point_text.text = ": ".plus(dancer.currentPoints.toString())
-            itemView.relevance_text.text = dancer.relevance.toString()
         } else {
             itemView.point_text.text = ": 0"
         }

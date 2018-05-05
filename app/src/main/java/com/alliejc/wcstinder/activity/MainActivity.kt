@@ -14,6 +14,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import com.alliejc.wcstinder.DancerComparator
 import com.alliejc.wcstinder.R
@@ -34,19 +38,21 @@ import retrofit2.Response
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+
     private val TAG = MainActivity::class.java.simpleName
 
     private var mClipboard: ClipboardManager? = null
     private var mClipData: ClipData? = null
     private var mAccessTokenTracker: AccessTokenTracker? = null
     private var mAccessToken: AccessToken? = null
-    private var mDancers: MutableList<Dancer>? = null
+    var mDancers: MutableList<Dancer>? = mutableListOf()
     private var mSelectedLevel = NEWCOMER
     private var mSelectedRole = LEADER
-    private var mAdapter: DancerAdapter? = null
+    lateinit var mAdapter: DancerAdapter
     private var mSearchName = ""
-    private var mToolbar: Toolbar? = null
+    lateinit var mToolbar: Toolbar
+    lateinit var mRelevanceFilter: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,8 +72,9 @@ class MainActivity : AppCompatActivity() {
         setClickListeners()
         setUpRecyclerView()
         level_radio_group.check(R.id.newcomer_radio_button)
-        getDancers(mSelectedLevel, mSelectedRole)
-
+        getDancers(role = mSelectedRole, division =  mSelectedLevel)
+        mAdapter.updateAdapter(mDancers)
+        setRelevanceFilter()
     }
 
     private fun setUpLoginDialog() {
@@ -83,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpRecyclerView(){
+    private fun setUpRecyclerView() {
         val linearLayout = LinearLayoutManager(this)
         recycler_view.layoutManager = linearLayout
 
@@ -109,17 +116,18 @@ class MainActivity : AppCompatActivity() {
                     mSelectedLevel = NOVICE
 
                 R.id.intermediate_radio_button ->
-                        mSelectedLevel = INTERMEDIATE
+                    mSelectedLevel = INTERMEDIATE
 
                 R.id.advanced_radio_button ->
-                        mSelectedLevel = ADVANCED
+                    mSelectedLevel = ADVANCED
 
                 R.id.allstar_radio_button ->
-                        mSelectedLevel = ALL_STAR
+                    mSelectedLevel = ALL_STAR
             }
 
             toggleExpandableLayout()
-            getDancers(mSelectedLevel, mSelectedRole)
+            getDancers(role = mSelectedRole, division =  mSelectedLevel)
+            mAdapter.updateAdapter(mDancers)
         }
 
         role_tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -135,17 +143,18 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun getTabData(tabPosition: Int){
+    private fun getTabData(tabPosition: Int) {
         when (tabPosition) {
             0 -> mSelectedRole = LEADER
             1 -> mSelectedRole = FOLLOW
         }
 
-        getDancers(mSelectedLevel, mSelectedRole)
+        getDancers(role = mSelectedRole, division =  mSelectedLevel)
+        mAdapter.updateAdapter(mDancers)
     }
 
-    private fun toggleExpandableLayout(){
-        if(expandable_layout.isExpanded){
+    private fun toggleExpandableLayout() {
+        if (expandable_layout.isExpanded) {
             expandable_layout.collapse()
             expand_collapse_icon.setImageDrawable(resources.getDrawable(R.drawable.ic_expand_more))
         } else {
@@ -155,6 +164,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpToolbar() {
+        mToolbar = findViewById(R.id.toolbar)
         setSupportActionBar(mToolbar)
         val bar = supportActionBar
         if (bar != null) {
@@ -164,6 +174,7 @@ class MainActivity : AppCompatActivity() {
             bar.elevation = 2f
         }
     }
+
     private fun launchFBIntent() {
         if (FACEBOOK_URL.equals("fb://search/")) {
             mClipboard?.primaryClip = mClipData
@@ -193,17 +204,65 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<MutableList<Dancer>>, response: Response<MutableList<Dancer>>) {
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     Log.e(TAG, response.message())
                     var list = sortByRelevance(response.body())
-                    mAdapter?.updateAdapter(list)
+                    mDancers = list as MutableList<Dancer>
                 }
             }
         })
     }
-}
 
- private fun sortByRelevance(list: MutableList<Dancer>?):MutableList<Dancer>? {
+    fun setRelevanceFilter() {
+        mRelevanceFilter = findViewById(R.id.filter_spinner)
+        var arrayAdapter = ArrayAdapter.createFromResource(this, R.array.relevance_filter, android.R.layout.simple_spinner_item)
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        mRelevanceFilter.adapter = arrayAdapter
+        mRelevanceFilter.onItemSelectedListener = this
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+    }
+
+    fun getDancersForRelevance(relevance: Int): MutableList<Dancer>{
+        getDancers(role = mSelectedRole, division =  mSelectedLevel)
+        var list: MutableList<Dancer> = mutableListOf()
+        for(dancer in mDancers!!){
+            if(dancer.relevance == relevance){
+                list.add(dancer)
+            }
+        }
+        return list
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        if (mDancers != null) {
+            when (position) {
+                0 -> {
+                    mAdapter.updateAdapter(getDancersForRelevance(0))
+                }
+                1 -> {
+                    mAdapter.updateAdapter(getDancersForRelevance(1))
+                }
+                2 -> {
+                    mAdapter.updateAdapter(getDancersForRelevance(2))
+                }
+                3 -> {
+                    mAdapter.updateAdapter(getDancersForRelevance(3))
+                }
+                4 -> {
+                    mAdapter.updateAdapter(getDancersForRelevance(4))
+                }
+                5 -> {
+                    mAdapter.updateAdapter(getDancersForRelevance(5))
+                }
+            }
+        }
+    }
+
+    private fun sortByRelevance(list: MutableList<Dancer>?): MutableList<Dancer>? {
         Collections.sort(list, DancerComparator())
         return list
     }
+}
+

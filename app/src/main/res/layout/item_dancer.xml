@@ -44,30 +44,6 @@
                 android:layout_below="@+id/name_text"
                 android:layout_toRightOf="@id/level_text" />
 
-    <TextView
-        android:id="@+id/relevance_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:text="Relevance: "
-        android:textSize="15sp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_below="@+id/level_text"
-        android:layout_toRightOf="@id/point_text" />
-
-    <TextView
-        android:id="@+id/relevance_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:text="points"
-        android:textSize="15sp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_below="@+id/level_text"
-        android:layout_toRightOf="@id/relevance_title" />
-
             <ImageButton
                 android:id="@+id/contact_button"
                 android:layout_width="wrap_content"

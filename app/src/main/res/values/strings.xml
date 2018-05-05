@@ -10,4 +10,13 @@
     <string name="facebook_app_id">602445503431907</string>
     <string name="fb_login_protocol_scheme">fb602445503431907</string>
     <string name="toolbar_title">WCS Strictly Finder</string>
+
+    <string-array name="relevance_filter">
+        <item>0 yrs</item>
+        <item>1 yr</item>
+        <item>2 yrs</item>
+        <item>3 yrs</item>
+        <item>4 yrs</item>
+        <item>5 yrs</item>
+    </string-array>
 </resources>

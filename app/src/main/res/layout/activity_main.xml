@@ -126,12 +126,37 @@
                 android:text="Follower" />
         </android.support.design.widget.TabLayout>
 
+        <RelativeLayout
+            android:id="@+id/filter_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/role_tablayout"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/filter_spinner"
+                android:layout_centerVertical="true"
+                android:text="Years since last point:"
+                android:textColor="@color/subtitle_grey"/>
+
+            <Spinner
+                android:id="@+id/filter_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/subtitle_grey"/>
+        </RelativeLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/role_tablayout">
+            android:layout_below="@+id/filter_view">
         </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 

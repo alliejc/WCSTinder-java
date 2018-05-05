@@ -8,6 +8,7 @@ import com.alliejc.wcstinder.callback.IOnSelected
 import com.alliejc.wcstinder.viewholder.DancerViewHolder
 import com.alliejc.wcstinder.ext.inflate
 import com.alliejc.wcstinder.trackmyswing.Dancer
+import org.zakariya.stickyheaders.SectioningAdapter
 
 class DancerAdapter(context: Context, listener:IOnSelected): RecyclerView.Adapter<DancerViewHolder>() {
 
