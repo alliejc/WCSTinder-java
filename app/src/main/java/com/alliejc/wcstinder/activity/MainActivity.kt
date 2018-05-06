@@ -73,8 +73,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         setUpRecyclerView()
         level_radio_group.check(R.id.newcomer_radio_button)
         getDancers(role = mSelectedRole, division =  mSelectedLevel)
-        mAdapter.updateAdapter(mDancers)
         setRelevanceFilter()
+        mAdapter.updateAdapter(mDancers)
     }
 
     private fun setUpLoginDialog() {
